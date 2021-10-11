@@ -1,0 +1,76 @@
+**** CSC207 Phase 2 - Conference System Design Patterns ****
+This file contains descriptions of the design patterns we implemented, including the classes involved and the rationale
+behind applying the design pattern.
+
+**** Dependency Injection ****
+Way 1:
+    (*) EventManipulationManager, EventFactory
+    (*) MessageManager, MessageFactory
+    (*) StartUpController, SystemControllerFactory
+
+We used Dependency Injection to remove hard dependencies from EventManipulationManager, MessageManager, and
+StartUpController. These three classes create new objects of type Event, Message, and SystemController respectively.
+We replaced direct calls to the constructor with calls to the get method inside the respective Factory class,
+eliminating the hard dependency.
+
+Way 2:
+    (*) between Controllers and Scanner
+    (*) between Controllers and Use Case classes (Managers)
+    (*) see the SystemController constructor for examples
+
+We used Dependency Injection to remove hard dependencies between Controller and Use Case classes. Each Controller class
+interacts with multiple Use Case classes. Instead of instantiating new Use Case objects in the Controller class
+constructor—thus creating a hard dependency—we passed in a ManagerParameterObject with the managers to then be saved
+instead.
+
+We took a similar approach with the Scanner used by Controllers to accept console input. Rather than directly construct
+a new Scanner object in each Controller (which research suggested would be bad practice since multiple instances of
+Scanner would read from System.in at the same time), we chose to pass around one instance of Scanner initially
+instantiated in StartUpController.
+
+**** Simple Factory ****
+    (*) EventManipulationManager, EventFactory
+    (*) MessageManager, MessageFactory
+    (*) SystemControllerFactory
+We used the Simple Factory design pattern in order to:
+
+(*) Make the class being instantiated more extensible, by allowing subclasses to be easily instantiated.
+        For example, the SystemControllerFactory allows the StartupController to easily create a new object of a
+        subclass of SystemController depending on which type of user is currently using the program, without referring
+        to the details of the inheritance hierarchy of SystemController. Therefore, any future changes to the
+        subclasses of SystemController will only have to be reflected in the factory class, while the
+        createSystemController call will not be changed.
+
+(*) Encapsulate the instantiation process for classes.
+        In particular, the new keyword is only used in the factory class. The process of deciding which subclass to
+        instantiate is also encapsulated in the factory; the client code need only pass in the information required for
+        making this decision and an object of the appropriate subclass will be returned.
+
+(*) Remove hard dependencies (see Dependency Injection)
+        By encapsulating the new keyword in the factory class, we are removing the hard dependency that would otherwise
+        be present between the calling class and the instantiated class. The new object created can be tested and used
+        independently of the calling class.
+
+**** Facade ****
+    (*) EventControllerFacade, EventInformationController, EventManipulationController
+    (*) MessageControllerFacade, MessageInteractionController, MessageSendingController, MessageViewingController
+    (*) EventInformationManager, EventManagerFacade, EventManipulationManager
+    (*) UserInformationManager, UserManagerFacade, UserManipulationManager
+
+Our controllers were once responsible to a single actor, but we added enough methods to each of them that eventually
+it was more reasonable to consider some of the features as belonging to different actors. For example, the features
+offered by the former EventController could naturally be categorized as either information-providing features or
+event-modifying features; hence it was plausible that at least two actors could act as sources of change for the code
+in EventController. We split the responsibilities of the controller into small controllers based on these categories
+of features that we identified, and then converted the controller into a controller facade, which simply delegates
+requests to the new controller classes that it contains. (In some cases, when the code for a method did not clearly
+belong to any category, we decided to leave it in the facade, as long as it was extremely simple and unlikely to be
+changed).
+
+This refactoring also helped resolve the Large Class code smell that we encountered, since the original controller had
+many private helper methods that were now moved to the more specialized controllers. The facade class therefore
+provides a simple interface to a complex underlying system.
+
+Our reasoning for refactoring the managers was similar, except that in this case the original manager did not have many
+private methods, so the Facade design pattern did not reduce the number of methods in the manager; instead, it moved
+the implementation to the specialized managers, making the manager facade very simple.

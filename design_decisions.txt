@@ -1,0 +1,65 @@
+**** CSC207 Phase 2 - Conference System Design Decisions ****
+This file contains general design choices for how we resolved ambiguity in the specification as well as the rationale
+behind larger design decisions.
+
+The following descriptions involve design choices that we made based on the specification.
+
+** General Choices **
+Any type of user can do all the actions that an Attendee can do with the exception of writing reviews.
+This is enforced by 3 common menus (Events, Friends List, and Messaging) but showing specialized menus to
+specific user types.
+
+** Messaging **
+Every type of user can message friends that they have added to their friends list.
+This is the only messaging that Attendees can do (so Attendees cannot add Organizers to their friends list).
+Every type of user can reply to any message that was sent to them.
+
+** Signup **
+All types of user can sign up to attend an event or cancel their attendance in an event they are signed up for
+by entering the title of an event.
+
+** Rooms **
+Rooms are uniquely identified by their RoomID (their room number), so 2 rooms cannot have the same room number.
+A room cannot have multiple events at the same time.
+
+** Events **
+Events are uniquely identified by their title.
+Events are created with no speakers scheduled within them.
+Only Organizers can create events and assign a speaker to an event.
+
+** Requests **
+All types of Users can make requests.
+Notably, even Organizers can make requests that can be addressed by other Organizers).
+
+The following descriptions provide rationale for larger design choices.
+
+** Using UserRepository and EventRepository **
+After applying the Facade pattern to EventManager and UserManager, the new specialized managers still needed to
+access the respective Entity objects. Instead of passing a list of Entities (which would have made the managers
+dependent on the particular implementation of how Entities are being stored), we passed in an instance of a class
+implementing IEventRepository/IUserRepository. As a result, the managers know nothing about how the Entities
+are stored. They only use the methods provided by the interface to access and manage them.
+
+** Using method references **
+Throughout the program, we store lists or maps of method references (e.g. Runnables or Predicates). See for example
+SystemController and EventValidationController. These are used whenever we have to call several methods in a particular
+sequence (e.g. for validation), or decide which method to call based on user input (e.g. for processing menus).
+Storing method references simplifies these processes and makes the program more extensible (and Open-Closed).
+For example, if another layer of validation needs to be applied to the input, we can simply add another validator
+method to the list of validators, without modifying the existing code. In the SystemController inheritance hierarchy,
+the maps of commands are protected so that subclasses can easily add specialized commands. An example of this occurs
+in OrganizerSystemController where the method initializeMessagingCommands() adds new options to the Messaging menu.
+
+** Why we stored Entities in lists, not maps **
+If we used maps, we would store duplicate information already contained in the Entity objects as keys. For example,
+RoomManager could store a map of <RoomID> to <Room> Entities rather than a list of Rooms as it is currently, but we
+already store room IDs within the Entity itself and have getters to access that information. In addition, maps would
+also make iteration more cumbersome in some places.
+
+** Using an EventType enum for different types of Events rather than inheritance **
+All event types—Party (0 speakers), Talk (1 speaker), and Panel (many speakers)—are differentiated only by their
+number of speakers. If we were to create three subclasses of Event, all three subclasses would be exactly the same.
+Explicitly, since the speaker capacity is an instance variable of the Event class, the only difference between Events
+would be a different value passed into the constructor, but even this call is the same syntactically. Therefore,
+under the current design with the common functionality (namely methods) that events have, it made more sense to store
+an enum for the type rather than use inheritance.

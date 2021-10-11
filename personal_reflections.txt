@@ -1,0 +1,46 @@
+==== FIRST DRAFT REFLECTION ====
+Q: What was your contribution to Phase 1?
+- In terms of code, my solo responsibilities involved:
+>> implementing login functionality
+>> managing the friends list (viewing, adding, and removing friends), 
+>> adding new events, 
+>> adding and viewing new Rooms, and 
+>> creating default information. 
+
+However, I often worked on whatever needed to be done which involved tasks such as 
+>> redesigning classes to agree with Clean Architecture (e.g. rewriting code in Use Cases that accepted or returned entities to Controllers)
+>> refactoring the program to work with new data types (e.g. Strings -> Ints, Lists -> Maps)
+>> adding javadoc to packages (mainly User, Event, Room, and System) 
+
+However, I was equally if not more involved with design than code. Design decisions I was a part of include 
+>> where to display the menus (ultimately in SystemController) and the subsequent redesign of control flow to Main -> StartUpController -> SystemController (with Rudy)
+>> the idea to use Factory Method for SystemControllers, Messages, and Events (with Rudy)
+>> the inheritance structure of the SystemControllers (with Rudy)
+>> the idea to accept input in SystemControllers but do the processing in themed Controllers (e.g. EventController, UserController)
+to encapsulate the user requests and reduce bloating in one single Controller class (with Rudy)
+>> the presenter design (with Robin although the current design with an abstract Presenter and an EnumMap ishis idea!)
+Beyond the code and design, I helped with compiling resources for the group such as 
+>> our style guide, our to-do list, our Javadoc conventions with links to the Oracle website to reference 
+>> a list of relevant Piazza posts that helped make decisions (e.g. passing Use Case classes into Constructors as needed to ensure one instance)
+
+Rudy and I spent many hours in calls critiquing each other's code, debating each of these decisions, 
+and looking over sourcemaking and stackexchange for the typical conventions and applications. 
+
+==== FINAL VERSION REFLECTION ====
+Q: What was your contribution to Phase 2?
+Much of and by far the most time-consuming portion of my contribution was redesigning and refactoring. This involved:
+- incoorporating small classes from phase 1 into other classs (e.g. LoginController -> StartUp Controller)
+- redesigning the menus for each User type to use submenus
+- redesigning the Event hierarchy to account for different Event types (Party, Talk, Panel) with Rudy and Robin
+  (this in particular took many days with different approaches)
+- refactoring Thaneeshan's methods in UserAdminController to use private helper methods and the UserType enum rather than Strings
+- refactoring Matthew's methods in EventManager related to Organizer viewing to be private helper methods in ViewController
+  rather than methods in EventManager (to adhere to SRP and prevent bloating).
+
+In terms of extensions (new code), I was assigned the "view statistics" optional extension for Organizers and 
+the review/raffle extension for Attendees/Admins (which I came up with!). This involved:
+- designing the view package
+- implementing the methods for viewing user statistics in ViewController and ViewPresenter
+- implementing the Attendee ability to write reviews in AttendeeSystemController and the event package
+- implementing every user's ability to view reviews in the event package
+- implementing the Admin's ability to pull a winner for the raffle 

@@ -1,0 +1,45 @@
+**** CSC207 Phase 2 - Conference System List of Features ****
+This file contains the optional extensions and the list of our own features we included.
+It also contains information on where to find and how to test these features.
+
+** Optional Extensions **
+
+(1) Have the program produce a neatly formatted program or schedule for the conference that users have the option of
+"downloading" (outputting it as html, pdf, or similar). Alternatively, if you just want the program to print the
+schedule to the screen, then users should be able to request a schedule by at least three of: day, by speaker, by
+time (all 3-4 pm talks on all days), or just the ones they have signed up for, or "liked" events (where you have to
+enable users to "like" events).
+    (*) We implemented (1) by speaker, (2) by time, and (3) the ones they have signed up for.
+    (*) To test this feature, log into any account and select (2) Event Menu.  Then, to search by speaker or time,
+    select (4) Filter the events by ... To see the events you have signed up for, select (7) View your event schedule.
+
+(2) Enhance the user's messaging experience by allowing them to "mark as unread", delete, or archive messages after reading them.
+    (*) To test this feature, log in to any account and select (4) Messaging menu > (2) View your inbox > (2) Interact
+        with a message > (1) Delete or (2) Archive or (3) Mark as Unread
+    (*) We recommend logging into “tiffanie” or “robin” as they have default messages in their inbox (see README).
+
+(3) Expand the menus available to organizers to allow them to get useful summary stats about the conference.
+Include app traffic statistics, event enrollment statistics, and top-five lists (or something similar).
+You should include enough statistics to make this option as complicated as the other ones on this list.
+    (*) To test this feature, log into an Organizer account (“rudy” or “thaneeshan”), and select (5) View information menu
+
+(4) Allow the system to support additional user requests (e.g. dietary restrictions, accessibility requirements) where
+organizers can tag a request as "pending" or "addressed". All organizers see the same list of requests, so if one tags
+ a request as addressed, all other organizers can log in and see that.
+    (*) To test this feature, log into any account and select (4) Messaging menu > (5) Go to the requests menu
+    (*) To address requests, do the same as above but on an Organizer account (“rudy” or “thaneeshan”).
+
+** Our Own Features **
+
+(*) Making account creation more realistic.
+    (*) If a username is already in use, the user is recommended a similar username that is available.
+    (*) All account creation has strict password requirements using regex.
+
+(*) Attendees can write and view reviews for events they are signed up for.
+
+(*) Simulating a raffle for attendees to participate in. An Attendee that writes a review gains an entry into a raffle
+    that Admins can pull a winner for. Attendees that win the raffle are upgraded to VIP users.
+
+(*) Admins that can ban/unban users, delete accounts, or change a user’s type. Admins can only ban, delete and change
+    users of type Attendee, VIP and Speaker. They cannot target Organizers or other Admins for any of their actions.
+    They may also view a list of banned users.
